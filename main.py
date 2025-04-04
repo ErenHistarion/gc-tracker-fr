@@ -1,24 +1,24 @@
+# uv run ./main.py
+
+#Voici la nouvelle version de mon code, propose des améliorations et optimisation en les présentant dans des blocs séparés que ce soit plus facile pour moi à repérer, merci :
+
 import concurrent.futures
 import time
-import re
 from datetime import datetime
 
 import yaml                                                         # pip install pyyaml
-import gspread                                                      # pip install gspread
-from oauth2client.service_account import ServiceAccountCredentials  # pip install oauth2client
 import requests                                                     # pip install requests
 from bs4 import BeautifulSoup                                       # pip install beautifulsoup4
 from playwright.sync_api import sync_playwright                     # pip install playwright | playwright install-deps | playwright install
-import playwright_stealth                                           # pip install playwright-stealth setuptools 
+import playwright_stealth                                           # pip install playwright-stealth setuptools
+
+from src.logger import get_logger
+from src.utils import RUPTURE, DISPONIBLE, CONFIRMER, clean_price, clean_availability, get_random_user_agent
+from src.spreadsheet import get_existing_rows, add_to_spreadsheet, spreadsheet
+
+logger = get_logger(__name__)
 
 # Google Spreadsheet Access
-SHEET_KEY = "***"
-CREDENTIALS_PATH = "***"
-
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_PATH, scope)
-client = gspread.authorize(creds)
-spreadsheet = client.open_by_key(SHEET_KEY)
 sheets = {
     "5080": spreadsheet.worksheet("5080"),
     "5070Ti": spreadsheet.worksheet("5070Ti"),
@@ -26,77 +26,6 @@ sheets = {
 
 # Constants
 MAX_THREADS = 3 ## 3 default value
-RUPTURE = "RUPTURE"
-DISPONIBLE = "DISPONIBLE"
-CONFIRMER = "DEBUG"
-
-def log(message):
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"[{current_time}] {message}")
-
-def clean_price(raw_price):
-    if not raw_price:
-        return None
-    cleaned_price = re.sub(r'[^0-9.,€]', '', raw_price)
-    cleaned_price = cleaned_price.replace(',', '.')
-    cleaned_price = cleaned_price.replace('€', '.')
-    cleaned_price = cleaned_price.replace(' ', '')
-    cleaned_price = cleaned_price.strip(".")
-    if cleaned_price.count('.') > 1:
-        cleaned_price = cleaned_price.replace('.', '', cleaned_price.count('.') - 1)
-
-    if len(cleaned_price) > 2:
-        return f"{float(cleaned_price):.2f}"
-    else:
-        return None
-
-def clean_availability(raw_availability):
-    if not raw_availability:
-        return RUPTURE
-    raw_availability = raw_availability.lower()
-    
-    rupture_keywords = {"rupture", "indisponible", "sur commande", "attente", "Nicht verfügbar"}
-    disponible_keywords = {"disponible", "stock", "ajouter au panier", "dernière pièce", "jours", "auf lager"}
-    
-    if any(keyword in raw_availability for keyword in rupture_keywords):
-        return RUPTURE
-    if any(keyword in raw_availability for keyword in disponible_keywords):
-        return DISPONIBLE
-    else:
-        return RUPTURE
-
-def get_existing_rows(sheet):
-    rows = sheet.get_all_values()
-    existing_entries = {}
-    for i, row in enumerate(rows[1:], start=2):
-        if len(row) >= 2:
-            key = (row[0], row[1]) 
-            existing_entries[key] = i
-    return existing_entries
-
-def add_to_spreadsheet(existing_entries, sheet, url=None, name=None, availability=None, price=None, error=None):
-    if not name:
-        name = "NAME NOT FOUND, CHECK MANUALLY"
-    key = (name, url)
-    try:
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        if key not in existing_entries:
-            sheet.append_row([name, url, availability, price, current_time, error])
-            existing_entries[key] = len(existing_entries) + 2
-        else:
-            row_index = existing_entries[key]
-            sheet.update_cell(row_index, 5, current_time)
-            if availability:
-                sheet.update_cell(row_index, 3, availability)
-            if price:
-                sheet.update_cell(row_index, 4, price)
-            if error:
-                sheet.update_cell(row_index, 6, error)
-    except gspread.exceptions.APIError as err:  # Beware the 'Write requests per minute per user' of service 'sheets.googleapis.com': https://developers.google.com/workspace/sheets/api/limits
-        time.sleep(3)
-        add_to_spreadsheet(existing_entries, sheet, url, name, availability, price, error)
-    except Exception as err:
-        pass
 
 def get_selectors(url):
     if 'amazon' in url:
@@ -228,7 +157,7 @@ def get_selectors(url):
 
 def fetch_product_info(url):
     try:
-        log(f"Fetching data from {url}, using requests")
+        #logger.debug(f"Fetching data from {url}, using requests")
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
         }
@@ -238,22 +167,22 @@ def fetch_product_info(url):
         if response.status_code in [200, 202]:
             soup = BeautifulSoup(response.content, 'html.parser')
             product_data = extract_data(url, soup)
-            #log(f"Found with requests:{product_data}")
+            #logger.debug(f"Found with requests:{product_data}")
             validated_price = clean_price(product_data['price'])
-            #log(f"validated_price: {validated_price}")
+            #logger.debug(f"validated_price: {validated_price}")
             if (not product_data['name'] and not product_data['price']) or validated_price is None:
-                log(f"Data not found using requests, trying Playwright for {url}")
+                #logger.debug(f"Data not found using requests, trying Playwright for {url}")
                 return fetch_with_playwright(url)
             return product_data
         else:
             return fetch_with_playwright(url)
     except requests.exceptions.HTTPError as http_err:
         if response.status_code == 403:
-            log(f"🚨 Error fetching data from {url}: {http_err}")
-            log(f"Trying Playwright for {url}")
+            logger.error(f"🚨 Error fetching data from {url}: {http_err}")
+            #logger.debug(f"Trying Playwright for {url}")
             product_data = fetch_with_playwright(url)
         else:
-            log(f"🚨 Error fetching data from {url}: {http_err}")
+            logger.error(f"🚨 Error fetching data from {url}: {http_err}")
             product_data = {
                 'url': url,
                 'error': str(http_err)
@@ -262,7 +191,7 @@ def fetch_product_info(url):
             product_data['error'] = str(http_err)
         return product_data
     except Exception as err:
-        log(f"🚨 Error fetching data from {url}: {err}")
+        logger.error(f"🚨 Error fetching data from {url}: {err}")
         return {
             'url': url,
             'error': str(err)
@@ -288,8 +217,8 @@ def fetch_with_playwright(url):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context(
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-            viewport={'width': 1920, 'height': 1080}
+            user_agent = get_random_user_agent(),
+            viewport = {'width': 1920, 'height': 1080}
         )
         page = context.new_page()
         playwright_stealth.stealth_sync(page)
@@ -306,7 +235,7 @@ def fetch_with_playwright(url):
             'availability': availability.text_content().strip() if availability else None,
             'url': url,
         }
-        #log(f"Found with Playwright:{product_data}")
+        #logger.debug(f"Found with Playwright:{product_data}")
         browser.close()
         return product_data
 
@@ -324,24 +253,28 @@ def main():
                     for urls in config.values():
                         for url in urls:
                             futures.append(executor.submit(fetch_product_info, url))
-                log(f"{len(futures)} urls to check for {cg}")
+                #logger.debug(f"{len(futures)} urls to check for {cg}")
 
                 for future in concurrent.futures.as_completed(futures):
                     try:
                         product_data = future.result()
                         if 'error' not in product_data:
-                            log(f"Data retrieved: {product_data}")
+                            #logger.debug(f"Data retrieved: {product_data}")
+                            clean_availability_v = clean_availability(product_data['availability'])
+                            clean_price_v = clean_price(product_data['price'])
                             add_to_spreadsheet(existing_entries=existing_entries, sheet=current_sheet, url=product_data['url'], name=product_data['name'],
-                                            price=clean_price(product_data['price']), availability=clean_availability(product_data['availability']))
+                                            price=clean_price_v, availability=clean_availability_v)
+                            if clean_availability_v == DISPONIBLE:
+                                logger.info(f"{product_data['name']} available at {clean_price_v}€ on {product_data['url']}.")
                         else:
-                            log(f"🚨 Data retrieved: {product_data}")
+                            #logger.debug(f"🚨 Data retrieved: {product_data}")
                             add_to_spreadsheet(existing_entries=existing_entries, sheet=current_sheet, url=product_data['url'], availability=CONFIRMER, error=product_data['error'])
                     except Exception as err:
-                        log(f"🚨 Error processing URL {futures[future]}: {err}")
+                        logger.debug(f"🚨 Error processing URL {futures[future]}: {err}")
 
-            log(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-            log(f"Waiting for the next loop...")
-            log(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            logger.debug(f"Waiting for the next loop...")
+            logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             time.sleep(600)
 
 if __name__ == "__main__":
