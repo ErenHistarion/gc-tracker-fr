@@ -285,15 +285,15 @@ def main():
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         while True:
-            for cg in configs:
+            for gc in configs:
                 futures = []
-                current_sheet = sheets[str(cg)]
+                current_sheet = sheets[str(gc)]
                 existing_entries = get_existing_rows(current_sheet)
-                for config in configs[cg]:
+                for config in configs[gc]:
                     for urls in config.values():
                         for url in urls:
                             futures.append(executor.submit(fetch_product_info, url))
-                # logger.debug(f"{len(futures)} urls to check for {cg}")
+                # logger.debug(f"{len(futures)} urls to check for {gc}")
 
                 for future in concurrent.futures.as_completed(futures):
                     try:

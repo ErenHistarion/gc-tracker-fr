@@ -3,9 +3,9 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cg-tracker"
-version = "0.1.0"
-description = "Un outil pour surveiller la disponibilité et les prix des cartes graphiques."
+name = "gc-tracker-fr"
+version = "2025.04.04"
+description = "A tool designed to monitor the availability and prices of graphics cards."
 authors = [
     { name = "Kevin FISCHER", email = "mr.kevin.fischer@gmail.com" }
 ]
@@ -27,6 +27,3 @@ dependencies = [
 dev = [
     "black",
 ]
-
-[project.scripts]
-cg-tracker = "cg_tracker.main:main"
