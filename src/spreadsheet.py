@@ -1,24 +1,42 @@
-import gspread                                                      # pip install gspread
-from oauth2client.service_account import ServiceAccountCredentials  # pip install oauth2client
+import time
+from datetime import datetime
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from src.logger import get_logger
+
+logger = get_logger(__name__)
 
 SHEET_KEY = "***"
 CREDENTIALS_PATH = "***"
 
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+scope = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive",
+]
 creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_PATH, scope)
 client = gspread.authorize(creds)
 spreadsheet = client.open_by_key(SHEET_KEY)
+
 
 def get_existing_rows(sheet):
     rows = sheet.get_all_values()
     existing_entries = {}
     for i, row in enumerate(rows[1:], start=2):
         if len(row) >= 2:
-            key = (row[0], row[1]) 
+            key = (row[0], row[1])
             existing_entries[key] = i
     return existing_entries
 
-def add_to_spreadsheet(existing_entries, sheet, url=None, name=None, availability=None, price=None, error=None):
+
+def add_to_spreadsheet(
+    existing_entries,
+    sheet,
+    url=None,
+    name=None,
+    availability=None,
+    price=None,
+    error=None,
+):
     if not name:
         name = "NAME NOT FOUND, CHECK MANUALLY"
     key = (name, url)
@@ -36,8 +54,13 @@ def add_to_spreadsheet(existing_entries, sheet, url=None, name=None, availabilit
                 sheet.update_cell(row_index, 4, price)
             if error:
                 sheet.update_cell(row_index, 6, error)
-    except gspread.exceptions.APIError as err:  # Beware the 'Write requests per minute per user' of service 'sheets.googleapis.com': https://developers.google.com/workspace/sheets/api/limits
-        time.sleep(3)
-        add_to_spreadsheet(existing_entries, sheet, url, name, availability, price, error)
+    except (
+        gspread.exceptions.APIError
+    ) as err:  # Beware the 'Write requests per minute per user' of service 'sheets.googleapis.com': https://developers.google.com/workspace/sheets/api/limits
+        time.sleep(5)
+        add_to_spreadsheet(
+            existing_entries, sheet, url, name, availability, price, error
+        )
     except Exception as err:
+        logger.error(err)
         pass

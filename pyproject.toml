@@ -24,7 +24,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = []
+dev = [
+    "black",
+]
 
 [project.scripts]
 cg-tracker = "cg_tracker.main:main"
