@@ -43,9 +43,9 @@ By completing these steps, you'll ensure your environment is properly configured
 ## Dev
 format:
 ```bash
-	black --preview .
+black --preview .
 ```
 lint:
 ```bash
-	black --check .
+black --check .
 ```
