@@ -1,7 +1,30 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "cg-tracker"
 version = "0.1.0"
-description = "Add your description here"
+description = "Un outil pour surveiller la disponibilité et les prix des cartes graphiques."
+authors = [
+    { name = "Kevin FISCHER", email = "mr.kevin.fischer@gmail.com" }
+]
 readme = "README.md"
 requires-python = ">=3.8"
-dependencies = []
+dependencies = [
+    "pyyaml",
+    "gspread",
+    "oauth2client",
+    "requests",
+    "beautifulsoup4",
+    "playwright",
+    "playwright-stealth",
+    "setuptools",
+    "colorama",
+]
+
+[project.optional-dependencies]
+dev = []
+
+[project.scripts]
+cg-tracker = "cg_tracker.main:main"
