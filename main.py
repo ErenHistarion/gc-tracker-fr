@@ -199,17 +199,17 @@ def fetch_product_info(url):
             return fetch_with_playwright(url)
     except requests.exceptions.HTTPError as http_err:
         if response.status_code == 403:
-            logger.error(f"🚨 Error fetching data from {url}: {http_err}")
+            # logger.error(f"Error fetching data from {url}: {http_err}")
             # logger.debug(f"Trying Playwright for {url}")
             product_data = fetch_with_playwright(url)
         else:
-            logger.error(f"🚨 Error fetching data from {url}: {http_err}")
+            logger.error(f"Error fetching data from {url}: {http_err}")
             product_data = {"url": url, "error": str(http_err)}
         if not product_data["name"] and not product_data["price"]:
             product_data["error"] = str(http_err)
         return product_data
     except Exception as err:
-        logger.error(f"🚨 Error fetching data from {url}: {err}")
+        logger.error(f"Error fetching data from {url}: {err}")
         return {"url": url, "error": str(err)}
 
 
@@ -314,10 +314,10 @@ def main():
                             )
                             if clean_availability_v == DISPONIBLE:
                                 logger.info(
-                                    f"{product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
+                                    f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
                                 )
                         else:
-                            # logger.debug(f"🚨 Data retrieved: {product_data}")
+                            # logger.debug(f"Data retrieved: {product_data}")
                             add_to_spreadsheet(
                                 existing_entries=existing_entries,
                                 sheet=current_sheet,
@@ -327,7 +327,7 @@ def main():
                             )
                     except Exception as err:
                         logger.debug(
-                            f"🚨 Error processing URL {futures[future]}: {err}"
+                            f"Error processing {futures}: {err}"
                         )
 
             logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")

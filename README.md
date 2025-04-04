@@ -41,11 +41,12 @@ uv run main.py
 By completing these steps, you'll ensure your environment is properly configured and ready for development.
 
 ## Dev
-format:
-```bash
-black --preview .
-```
 lint:
 ```bash
 black --check .
 ```
+format:
+```bash
+black --preview .
+```
+
