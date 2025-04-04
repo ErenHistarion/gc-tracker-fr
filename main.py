@@ -1,6 +1,7 @@
 import concurrent.futures
 import time
 from datetime import datetime
+import random
 
 import yaml
 import requests
@@ -23,6 +24,7 @@ logger = get_logger(__name__)
 
 # Google Spreadsheet Access
 sheets = {
+    # "Tests": spreadsheet.worksheet("Tests"),
     "5080": spreadsheet.worksheet("5080"),
     "5070Ti": spreadsheet.worksheet("5070Ti"),
 }
@@ -35,8 +37,8 @@ def get_selectors(url):
     if "amazon" in url:
         return {
             "name": {"tag": "span", "class": "product-title-word-break"},
-            "price": {"tag": "span", "class": "a-price-whole"},
-            "availability": {"tag": "div", "class": "submit.add-to-cart-announce"},
+            "price": {"tag": "div", "class": "corePrice_feature_div"},
+            "availability": {"tag": "input", "class": "add-to-cart-button"},
         }
     elif "beo-france" in url:
         return {
@@ -93,7 +95,7 @@ def get_selectors(url):
         return {
             "name": {"tag": "h1", "class": "ps-main__product-title"},
             "price": {"tag": "span", "class": "offer-price__price"},
-            "availability": {"tag": "div", "class": "offer-stock__label"},
+            "availability": {"tag": "div", "class": "ps-main__stock--available"},
         }
     elif "hardware" in url:
         return {
@@ -175,11 +177,7 @@ def get_selectors(url):
 def fetch_product_info(url):
     try:
         # logger.debug(f"Fetching data from {url}, using requests")
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
-            )
-        }
+        headers = {"User-Agent": get_random_user_agent()}
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
         validated_price = None
@@ -200,7 +198,7 @@ def fetch_product_info(url):
     except requests.exceptions.HTTPError as http_err:
         if response.status_code == 403:
             # logger.error(f"Error fetching data from {url}: {http_err}")
-            # logger.debug(f"Trying Playwright for {url}")
+            logger.warning(f"Trying Playwright for {url}")
             product_data = fetch_with_playwright(url)
         else:
             logger.error(f"Error fetching data from {url}: {http_err}")
@@ -244,7 +242,7 @@ def fetch_with_playwright(url):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+            user_agent=get_random_user_agent(),
             viewport={"width": 1920, "height": 1080},
         )
         page = context.new_page()
@@ -256,21 +254,23 @@ def fetch_with_playwright(url):
             page.query_selector(
                 f"{selectors['name']['tag']}.{selectors['name']['class']}"
             )
-            or page.query_selector(selectors["name"]["class"])
+            or page.query_selector(f"#{selectors['name']['class']}")
             or page.query_selector(selectors["name"]["tag"])
         )
         price = page.query_selector(
             f"{selectors['price']['tag']}.{selectors['price']['class']}"
-        ) or page.query_selector(selectors["price"]["class"])
+        ) or page.query_selector(f"#{selectors['price']['class']}")
         availability = page.query_selector(
             f"{selectors['availability']['tag']}.{selectors['availability']['class']}"
-        ) or page.query_selector(selectors["availability"]["class"])
+        ) or page.query_selector(f"#{selectors['availability']['class']}")
 
         product_data = {
             "name": name.text_content().strip() if name else None,
             "price": price.text_content().strip() if price else None,
             "availability": (
-                availability.text_content().strip() if availability else None
+                availability.text_content().strip() or availability.input_value()
+                if availability
+                else None
             ),
             "url": url,
         }
@@ -317,7 +317,7 @@ def main():
                                     f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
                                 )
                         else:
-                            # logger.debug(f"Data retrieved: {product_data}")
+                            # logger.warning(f"Data retrieved: {product_data}")
                             add_to_spreadsheet(
                                 existing_entries=existing_entries,
                                 sheet=current_sheet,
@@ -326,14 +326,12 @@ def main():
                                 error=product_data["error"],
                             )
                     except Exception as err:
-                        logger.debug(
-                            f"Error processing {futures}: {err}"
-                        )
+                        logger.error(f"Error processing {future}: {err}")
 
             logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             logger.debug(f"Waiting for the next loop...")
             logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-            time.sleep(600)
+            time.sleep(random.randint(550, 650))
 
 
 if __name__ == "__main__":

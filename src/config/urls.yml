@@ -1,7 +1,7 @@
 #to_validate:
 5080:
   - msi_5080:
-    - https://www.amazon.fr/dp/B0DQGB8FTQ/
+    - https://www.amazon.fr/dp/B0DQGB8FTQ/  ## TODO: Improve price detection
     - https://www.amazon.de/dp/B0DQGB8FTQ/
     - https://www.amazon.es/dp/B0DQGB8FTQ/
     - https://www.amazon.it/dp/B0DQGB8FTQ/
@@ -15,21 +15,19 @@
     - https://pcandco.fr/carte-graphique/76826-msi-gaming-geforce-rtx-5080-16g-trio-oc-carte-graphique-nvidia-16-go-gddr7-4710000292100.html
     - https://www.pc21.fr/fiche/g5080-16gtcw-rtx5080-16g-gam-trio-oc-w-nvidia-geforce-rtx5080-16go-gddr7-1-x-hdmi-3-x-displayport-pci-express-5-0-i5671651.html
     - https://www.compumsa.eu/item/V531-045R-MSI-GeForce-RTX-5080-16GB-Gaming-Trio-OC-White-Carte-graphique-Nvidia-16650
-    - https://www.caseking.de/msi-geforce-rtx-5080-16g-gaming-trio-oc-white-16384-mb-gddr7/GCMC-396.html  ## La 403 semble parfois ne pas avoir lieu avec le nouveau code stealth
-    - https://www.beo-france.fr/produit/msi-geforce-rtx-5080-16g-gaming-trio-oc-white/ ## Plusieurs tag avec les mêmes classes, trouve 0€ en premier
-    - https://www.easymultimedia.fr/carte-graphique/1640-msi-geforce-rtx-5080-16g-gaming-trio-oc-white.html ## Revoir la partie disponibilité
-    - https://www.topachat.com/pages/detail2_cat_est_micro_puis_rubrique_est_wgfx_pcie_puis_ref_est_in20026819.html ## Gros pavé de texte récupéré à la place du prix
-    - https://shop.hardware.fr/fiche/AR202501080026.html  ## prix dans https://shop.hardware.fr/stock-price/AR202501080026
-    - https://shop.hardware.fr/stock-price/AR202501080026
-    - https://www.cdiscount.com/informatique/cartes-graphiques/carte-graphique-msi-geforce-rtx-5080-gaming-tr/f-10767-msi4711377292160.html ## Répond 200 mais contient pavé de texte erreur 403
-    - https://www.pccomponentes.fr/carte-graphique-msi-geforce-rtx-5080-gaming-trio-oc-white-16gb-gddr7-reflex-2-rtx-ai-dlss4
+    - https://www.caseking.de/msi-geforce-rtx-5080-16g-gaming-trio-oc-white-16384-mb-gddr7/GCMC-396.html
+    - https://www.beo-france.fr/produit/msi-geforce-rtx-5080-16g-gaming-trio-oc-white/ ## TODO: Find a way to get the price
+    - https://www.easymultimedia.fr/carte-graphique/1640-msi-geforce-rtx-5080-16g-gaming-trio-oc-white.html
+    - https://www.topachat.com/pages/detail2_cat_est_micro_puis_rubrique_est_wgfx_pcie_puis_ref_est_in20026819.html
+    - https://shop.hardware.fr/fiche/AR202501080026.html
+    - https://www.cdiscount.com/informatique/cartes-graphiques/carte-graphique-msi-geforce-rtx-5080-gaming-tr/f-10767-msi4711377292160.html
+    - https://www.pccomponentes.fr/carte-graphique-msi-geforce-rtx-5080-gaming-trio-oc-white-16gb-gddr7-reflex-2-rtx-ai-dlss4  ## TODO: To debug, not working yet
 
   - kfa2_5080:
     - https://www.rueducommerce.fr/p/r25018317187.html
     - https://www.materiel.net/produit/202501170062.html
     - https://www.ldlc.com/fiche/PB00662470.html
     - https://shop.hardware.fr/fiche/AR202501170062.html
-    - https://shop.hardware.fr/stock-price/AR202501170062
 
   - aero_5080:
     - https://www.rueducommerce.fr/p/r25018316428.html
@@ -46,7 +44,6 @@
     - https://www.compumsa.eu/item/GV-N5080AERO-OC-16GD-Gigabyte-GeForce-RTX-5080-16GB-Aero-OC-SFF-Carte-graphique-Nvidia-16644
     - https://www.caseking.de/gigabyte-geforce-rtx-5080-aero-oc-sff-16g-16384-mb-gddr7/GCGB-550.html
     - https://shop.hardware.fr/fiche/AR202501060118.html
-    - https://shop.hardware.fr/stock-price/AR202501060118
     - https://www.cdiscount.com/informatique/cartes-graphiques/carte-graphique-gigabyte-geforce-rtx-5080-aero/f-10767-asu4719331355555.html
 
 5070Ti:
@@ -64,9 +61,7 @@
     - https://www.ldlc.com/fiche/PB00666552.html
     - https://www.ldlc.com/fiche/PB00669921.html
     - https://shop.hardware.fr/fiche/AR202502110065.html
-    - https://shop.hardware.fr/stock-price/AR202502110065
     - https://shop.hardware.fr/fiche/AR202502250100.html
-    - https://shop.hardware.fr/stock-price/AR202502250100
 
   - eagle_5070ti:
     - https://www.amazon.fr/dp/B0DTQT98M3/
@@ -85,7 +80,6 @@
     - https://www.compumsa.eu/item/GV-N507TEAGLEOC-ICE-16GD-Gigabyte-GeForce-RTX-5070-Ti-16GB-Eagle-OC-Ice-SFF-Carte-graphique-Nvidia-16987
     - https://www.caseking.de/gigabyte-geforce-rtx-5070-ti-eagle-oc-ice-sff-16g-16384-mb-gddr7-/GCGB-555.html
     - https://shop.hardware.fr/fiche/AR202502100015.html
-    - https://shop.hardware.fr/stock-price/AR202502100015
 
   - aero_5070ti:
     - https://www.amazon.fr/dp/B0DTQVHQ6G/
