@@ -1,7 +1,7 @@
 #to_validate:
 5080:
   - msi_5080:
-    - https://www.amazon.fr/dp/B0DQGB8FTQ/  ## TODO: Improve price detection
+    - https://www.amazon.fr/dp/B0DQGB8FTQ/
     - https://www.amazon.de/dp/B0DQGB8FTQ/
     - https://www.amazon.es/dp/B0DQGB8FTQ/
     - https://www.amazon.it/dp/B0DQGB8FTQ/

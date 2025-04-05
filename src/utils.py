@@ -1,6 +1,10 @@
 import re
 import random
 
+from src.logger import get_logger
+
+logger = get_logger(__name__)
+
 RUPTURE = "RUPTURE"
 DISPONIBLE = "DISPONIBLE"
 CONFIRMER = "DEBUG"
@@ -11,6 +15,10 @@ def clean_price(raw_price):
         return None
     cleaned_price = re.sub(r"[^0-9.,€]", "", raw_price)
     cleaned_price = cleaned_price.replace(",", ".")
+    if len(cleaned_price) > 10:
+        filtered_price = re.findall(r'(\d+(?:.\d+)?)€', cleaned_price)
+        if filtered_price:
+            cleaned_price = filtered_price[0]
     cleaned_price = cleaned_price.replace("€", ".")
     cleaned_price = cleaned_price.replace(" ", "")
     cleaned_price = cleaned_price.strip(".")
