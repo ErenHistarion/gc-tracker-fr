@@ -172,3 +172,5 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+oauth2/cg_tracker-206212-1bd4939cf482.json
+uv.lock
