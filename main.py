@@ -19,6 +19,7 @@ from src.utils import (
     get_random_user_agent,
 )
 from src.spreadsheet import get_existing_rows, add_to_spreadsheet, spreadsheet
+from src.discord import send_discord_notification
 
 logger = get_logger(__name__)
 
@@ -313,9 +314,11 @@ def main():
                                 availability=clean_availability_v,
                             )
                             if clean_availability_v == DISPONIBLE:
+                                message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
                                 logger.info(
-                                    f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
+                                    message
                                 )
+                                send_discord_notification(message)
                         else:
                             # logger.warning(f"Data retrieved: {product_data}")
                             add_to_spreadsheet(
