@@ -165,6 +165,20 @@ def main():
                                 product_data["availability"]
                             )
                             clean_price_v = clean_price(product_data["price"])
+
+                            if clean_availability_v == DISPONIBLE:
+                                message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
+                                logger.info(message)
+                                key = (product_data["name"], product_data["url"])
+                                if key not in existing_entries:
+                                    send_discord_notification(message)
+                                else:
+                                    current_line = current_sheet.row_values(
+                                        existing_entries[key]
+                                    )
+                                    if current_line[2] == RUPTURE:
+                                        send_discord_notification(message)
+
                             add_to_spreadsheet(
                                 existing_entries=existing_entries,
                                 sheet=current_sheet,
@@ -173,14 +187,8 @@ def main():
                                 price=clean_price_v,
                                 availability=clean_availability_v,
                             )
-                            if clean_availability_v == DISPONIBLE:
-                                message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
-                                logger.info(
-                                    message
-                                )
-                                send_discord_notification(message)
                         else:
-                            # logger.warning(f"Data retrieved: {product_data}")
+                            logger.error(f"Missing data retrieved: {product_data}")
                             add_to_spreadsheet(
                                 existing_entries=existing_entries,
                                 sheet=current_sheet,

@@ -14,7 +14,8 @@ GC Tracker is a tool designed to monitor the availability and prices of graphics
 
 Before installing the project, ensure you have the following:
 - Python 3.x installed on your machine.
-- A Google account with access to Google Sheets.
+- A [Google Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) with an active API key to Google Sheets.
+- A Discord [Webhook](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - [uv](https://github.com/astral-sh/uv) Python package manager
 
 ## Quick Start
@@ -50,3 +51,29 @@ format:
 black --preview .
 ```
 
+## Compatible e-shop
+### Fully compatible
+- https://www.ldlc.com
+- https://www.rueducommerce.fr
+- https://www.materiel.net
+- https://www.grosbill.com
+- https://www.cybertek.fr
+- https://www.1foteam.com
+- https://shop.hardware.fr
+- https://www.easymultimedia.fr
+- https://pcandco.fr
+- https://www.pc21.fr
+- https://www.caseking.de
+- https://www.compumsa.eu
+
+### Partialy compatible
+- https://www.amazon.fr
+- https://www.amazon.de
+- https://www.amazon.es
+- https://www.amazon.it
+- https://www.cdiscount.com
+- https://www.1fodiscount.com
+- https://www.beo-france.fr
+
+### Not compatible yet
+- https://www.pccomponentes.fr

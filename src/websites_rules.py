@@ -137,4 +137,3 @@ def get_selectors(url):
             "price": {"tag": "span", "class": "a-price-whole"},
             "availability": {"tag": "p", "class": "availability"},
         }
-
