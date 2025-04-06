@@ -10,7 +10,7 @@ authors = [
     { name = "Kevin FISCHER", email = "mr.kevin.fischer@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "pyyaml",
     "gspread",

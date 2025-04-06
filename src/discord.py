@@ -8,7 +8,7 @@ logger = get_logger(__name__)
 
 def send_discord_notification(
     message,
-    webhook_url="https://discord.com/api/webhooks/***",
+    webhook_url="https://discord.com/api/webhooks/1358016683117121658/pw1fIdFl54janX-e5-h-usNfJdU893z7YTYQGOLPs5oXaxxyLOjjqcrooE1-t2t45eM5",
 ):
     data = {"content": message}
     headers = {"Content-Type": "application/json"}

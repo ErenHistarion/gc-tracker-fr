@@ -60,6 +60,7 @@ black --preview .
 - https://www.grosbill.com
 - https://www.cybertek.fr
 - https://www.1foteam.com
+- https://www.1fodiscount.com   # No price when there is no stock
 - https://shop.hardware.fr
 - https://www.easymultimedia.fr
 - https://www.topbiz.fr
@@ -67,16 +68,15 @@ black --preview .
 - https://www.pc21.fr
 - https://www.caseking.de
 - https://www.compumsa.eu
+- https://www.cdiscount.com
 
 ### Partialy compatible
-- https://www.amazon.fr
-- https://www.amazon.de
-- https://www.amazon.es
-- https://www.amazon.it
-- https://www.cdiscount.com
-- https://www.1fodiscount.com
-- https://www.beo-france.fr
-- https://www.galaxus.fr
+- https://www.amazon.fr         # Issue detecting price when there is no stock
+- https://www.amazon.de         # Issue detecting price when there is no stock
+- https://www.amazon.es         # Issue detecting price when there is no stock
+- https://www.amazon.it         # Issue detecting price when there is no stock
+- https://www.beo-france.fr     # Issue detecting price
+- https://www.galaxus.fr        # Often an ERR_HTTP2_PROTOCOL_ERROR error
 
 ### Not compatible yet
-- https://www.pccomponentes.fr
+- https://www.pccomponentes.fr  # Error 403
