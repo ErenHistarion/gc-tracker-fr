@@ -39,6 +39,7 @@ def clean_availability(raw_availability):
     rupture_keywords = {
         "rupture",
         "indisponible",
+        "non disponible"
         "sur commande",
         "attente",
         "Nicht verfügbar",
@@ -49,6 +50,7 @@ def clean_availability(raw_availability):
         "ajouter au panier",
         "dernière pièce",
         "jours",
+        "livré",
         "auf lager",
     }
 

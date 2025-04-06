@@ -62,7 +62,6 @@ black --preview .
 - https://www.1foteam.com
 - https://shop.hardware.fr
 - https://www.easymultimedia.fr
-- https://www.galaxus.fr
 - https://www.topbiz.fr
 - https://pcandco.fr
 - https://www.pc21.fr
@@ -77,6 +76,7 @@ black --preview .
 - https://www.cdiscount.com
 - https://www.1fodiscount.com
 - https://www.beo-france.fr
+- https://www.galaxus.fr
 
 ### Not compatible yet
 - https://www.pccomponentes.fr
