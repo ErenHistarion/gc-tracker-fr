@@ -7,6 +7,7 @@ GC Tracker is a tool designed to monitor the availability and prices of graphics
 - Monitoring of graphics card availability and prices.
 - Data extraction from multiple websites.
 - Automatic recording of information in Google Sheets.
+- Send Discord notification
 - Use of `playwright` for rendering dynamic web pages.
 - Management of concurrent requests for increased efficiency.
 
