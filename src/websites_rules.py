@@ -113,6 +113,16 @@ SELECTORS = {
             "class": "availability_styled_AvailabilityTextWrapper__vhs3S",
         },
     },
+    "infomaxparis": {
+        "name": {"tag": "h1", "class": "page-heading"},
+        "price": {"tag": "span", "class": "product-price"},
+        "availability": {"tag": "span", "class": "product-availability"},
+    },
+    "fr-store.msi.com": {
+        "name": {"tag": "h1", "class": "product-title"},
+        "price": {"tag": "div", "class": "price__default"},
+        "availability": {"tag": "div", "class": "product-info__add-button"},
+    },
 }
 
 DEFAULT_SELECTORS = {
