@@ -61,6 +61,8 @@ black --preview .
 - https://www.1foteam.com
 - https://shop.hardware.fr
 - https://www.easymultimedia.fr
+- https://www.galaxus.fr
+- https://www.topbiz.fr
 - https://pcandco.fr
 - https://www.pc21.fr
 - https://www.caseking.de
