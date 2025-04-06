@@ -131,6 +131,7 @@ DEFAULT_SELECTORS = {
     "availability": {"tag": "span", "class": "availability"},
 }
 
+
 def get_selectors(url):
     domain = urlparse(url).netloc
     for key in SELECTORS:

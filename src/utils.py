@@ -10,7 +10,7 @@ DISPONIBLE = "DISPONIBLE"
 CONFIRMER = "DEBUG"
 
 
-def clean_price(raw_price):
+def clean_price(raw_price, url=None):
     if not raw_price:
         return None
     cleaned_price = re.sub(r"[^0-9.,€]", "", raw_price)
@@ -24,6 +24,8 @@ def clean_price(raw_price):
     cleaned_price = cleaned_price.strip(".")
     if cleaned_price.count(".") > 1:
         cleaned_price = cleaned_price.replace(".", "", cleaned_price.count(".") - 1)
+    if url and "fr-store.msi.com" in url:
+        cleaned_price = str(float(cleaned_price) / 100)
 
     if len(cleaned_price) > 2:
         return f"{float(cleaned_price):.2f}"
@@ -39,7 +41,7 @@ def clean_availability(raw_availability):
     rupture_keywords = {
         "rupture",
         "indisponible",
-        "non disponible"
+        "non disponible",
         "sur commande",
         "attente",
         "Nicht verfügbar",

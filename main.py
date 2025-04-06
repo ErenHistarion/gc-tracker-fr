@@ -164,7 +164,9 @@ def main():
                             clean_availability_v = clean_availability(
                                 product_data["availability"]
                             )
-                            clean_price_v = clean_price(product_data["price"])
+                            clean_price_v = clean_price(
+                                product_data["price"], product_data["url"]
+                            )
 
                             if clean_availability_v == DISPONIBLE:
                                 message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
