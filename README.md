@@ -52,8 +52,8 @@ format:
 black --preview .
 ```
 
-## Compatible e-shop
-### Fully compatible
+## Compatible e-shops
+### Compatible
 - https://www.ldlc.com
 - https://www.rueducommerce.fr
 - https://www.materiel.net
