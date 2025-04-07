@@ -70,7 +70,6 @@ black --preview .
 - https://www.compumsa.eu
 - https://www.cdiscount.com
 - https://infomaxparis.com
-- https://fr-store.msi.com
 
 ### Partialy compatible
 - https://www.amazon.fr         # Issue detecting price when there is no stock
@@ -79,6 +78,7 @@ black --preview .
 - https://www.amazon.it         # Issue detecting price when there is no stock
 - https://www.beo-france.fr     # Issue detecting price
 - https://www.galaxus.fr        # Often an ERR_HTTP2_PROTOCOL_ERROR error
+- https://fr-store.msi.com      # Rare false positive availability alert
 
 ### Not compatible yet
 - https://www.pccomponentes.fr  # Error 403
