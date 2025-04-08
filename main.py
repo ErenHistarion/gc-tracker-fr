@@ -170,17 +170,20 @@ def main():
 
                             if clean_availability_v == DISPONIBLE:
                                 message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
-                                logger.info(message)
+                                
                                 key = (product_data["name"], product_data["url"])
                                 if key not in existing_entries:
-                                    send_discord_notification(message)
+                                    logger.info(f"🚨 NEW {message}")
+                                    send_discord_notification(f"🚨 NEW {message}")
                                 else:
                                     current_line = current_sheet.row_values(
                                         existing_entries[key]
                                     )
                                     if current_line[2] == RUPTURE:
-                                        send_discord_notification(message)
+                                        logger.info(f"🚨 RESTOCK {message}")
+                                        send_discord_notification(f"🚨 RESTOCK {message}")
                                     if float(current_line[3]) > float(clean_price_v):
+                                        logger.info(f"🚨 PRICE DROP {message}")
                                         send_discord_notification(f"🚨 PRICE DROP {message}")
 
                             add_to_spreadsheet(
