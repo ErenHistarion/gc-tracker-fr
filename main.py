@@ -59,7 +59,7 @@ def fetch_product_info(url):
     except requests.exceptions.HTTPError as http_err:
         if response.status_code == 403:
             # logger.error(f"Error fetching data from {url}: {http_err}")
-            logger.warning(f"Trying Playwright for {url}")
+            # logger.warning(f"Trying Playwright for {url}")
             product_data = fetch_with_playwright(url)
         else:
             logger.error(f"Error fetching data from {url}: {http_err}")
@@ -206,9 +206,7 @@ def main():
                     except Exception as err:
                         logger.error(f"Error processing {future}: {err}")
 
-            logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             logger.debug(f"Waiting for the next loop...")
-            logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             time.sleep(random.randint(550, 650))
 
 
