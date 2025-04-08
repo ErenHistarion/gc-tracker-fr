@@ -180,6 +180,8 @@ def main():
                                     )
                                     if current_line[2] == RUPTURE:
                                         send_discord_notification(message)
+                                    if float(current_line[3]) > float(clean_price_v):
+                                        send_discord_notification(f"🚨 PRICE DROP {message}")
 
                             add_to_spreadsheet(
                                 existing_entries=existing_entries,
