@@ -183,8 +183,8 @@ def main():
                                         logger.info(f"🚨 RESTOCK {message}")
                                         send_discord_notification(f"🚨 RESTOCK {message}")
                                     if float(current_line[3]) > float(clean_price_v):
-                                        logger.info(f"🚨 PRICE DROP {message}")
-                                        send_discord_notification(f"🚨 PRICE DROP {message}")
+                                        logger.info(f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}")
+                                        send_discord_notification(f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}")
 
                             add_to_spreadsheet(
                                 existing_entries=existing_entries,
