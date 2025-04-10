@@ -53,11 +53,13 @@ black --preview .
 ```
 
 ## TODO
-- Add PCComponentes
-- Save result into a database instead of overwriting a spreadsheet
-- Improve the way to list URL to check (database too?)
-- Create an UI
-- Put everything into a docker image
+- **Add PCComponentes**: Integrate PCComponentes as a new source for product data.
+- **Save results into a database instead of overwriting a spreadsheet**: Implement a database to store results, ensuring data persistence and easier querying.
+- **Improve the method of listing URLs to check (database as well?)**: Enhance URL management by storing and retrieving URLs from a database, allowing for better organization and scalability.
+- **Automatically detect products in a store**: Implement a feature to automatically detect and list products available in a store, enhancing the application's functionality and ease of use.
+- **Optionally generate affiliate links for content creators**: Add functionality to generate affiliate links for products, enabling content creators to earn commissions.
+- **Create a user interface**: Develop a user-friendly interface to interact with the application, making it accessible to non-technical users.
+- **Package everything into a Docker image**: Containerize the application using Docker to ensure consistent deployment across different environments.
 
 ## Compatible e-shops
 ### Compatible
