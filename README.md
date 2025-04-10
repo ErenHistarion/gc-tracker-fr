@@ -53,8 +53,11 @@ black --preview .
 ```
 
 ## TODO
+- Add PCComponentes
 - Save result into a database instead of overwriting a spreadsheet
 - Improve the way to list URL to check (database too?)
+- Create an UI
+- Put everything into a docker image
 
 ## Compatible e-shops
 ### Compatible
