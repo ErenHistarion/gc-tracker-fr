@@ -2,6 +2,7 @@ import concurrent.futures
 import time
 from datetime import datetime
 import random
+import re
 
 import yaml
 import requests
@@ -169,7 +170,7 @@ def main():
                             )
 
                             if clean_availability_v == DISPONIBLE:
-                                message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {product_data['url']}."
+                                message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {re.sub(r'(https?://\S+)', r'<\1>', product_data['url'])}."
                                 
                                 key = (product_data["name"], product_data["url"])
                                 if key not in existing_entries:

@@ -17,7 +17,6 @@ def send_discord_notification(
 ):
     data = {
         "content": message,
-        "flags": 2,
     }
     headers = {"Content-Type": "application/json"}
     response = requests.post(webhook_url, data=json.dumps(data), headers=headers)
