@@ -1,16 +1,24 @@
 import requests
 import json
+import yaml
 
 from src.logger import get_logger
 
 logger = get_logger(__name__)
 
+with open("./src/config/config.yml", "r") as file:
+    configs = yaml.safe_load(file)["discord"]
+
+WEBHOOK_URL = configs["WEBHOOK_URL"]
 
 def send_discord_notification(
     message,
-    webhook_url="https://discord.com/api/webhooks/1358016683117121658/pw1fIdFl54janX-e5-h-usNfJdU893z7YTYQGOLPs5oXaxxyLOjjqcrooE1-t2t45eM5",
+    webhook_url=WEBHOOK_URL,
 ):
-    data = {"content": message}
+    data = {
+        "content": message,
+        "flags": 2,
+    }
     headers = {"Content-Type": "application/json"}
     response = requests.post(webhook_url, data=json.dumps(data), headers=headers)
 

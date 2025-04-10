@@ -1,0 +1,6 @@
+discord:
+  WEBHOOK_URL: "***"
+
+spreadsheet:
+  SHEET_KEY: "***"
+  CREDENTIALS_PATH: "***"

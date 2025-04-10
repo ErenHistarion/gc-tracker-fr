@@ -1,4 +1,5 @@
 import time
+import yaml
 from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -6,8 +7,11 @@ from src.logger import get_logger
 
 logger = get_logger(__name__)
 
-SHEET_KEY = "***"
-CREDENTIALS_PATH = "***"
+with open("./src/config/config.yml", "r") as file:
+    configs = yaml.safe_load(file)["spreadsheet"]
+
+SHEET_KEY = configs["SHEET_KEY"]
+CREDENTIALS_PATH = configs["CREDENTIALS_PATH"]
 
 scope = [
     "https://spreadsheets.google.com/feeds",
