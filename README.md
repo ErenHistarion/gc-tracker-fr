@@ -52,6 +52,10 @@ format:
 black --preview .
 ```
 
+## TODO
+- Save result into a database instead of overwriting a spreadsheet
+- Improve the way to list URL to check (database too?)
+
 ## Compatible e-shops
 ### Compatible
 - https://www.ldlc.com
