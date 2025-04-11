@@ -183,7 +183,7 @@ def main():
                                     if current_line[2] == RUPTURE:
                                         logger.info(f"🚨 RESTOCK {message}")
                                         send_discord_notification(f"🚨 RESTOCK {message}")
-                                    if float(current_line[3]) > float(clean_price_v):
+                                    elif float(current_line[3]) > float(clean_price_v):
                                         logger.info(f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}")
                                         send_discord_notification(f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}")
 
