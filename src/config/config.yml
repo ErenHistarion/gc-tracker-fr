@@ -1,3 +1,9 @@
+main:
+  MAX_THREADS: 3
+  ACTIVE_DISCORD: True
+  ACTIVE_SPREADSHEET: True
+  ACTIVE_POSTGRESQL: True
+
 discord:
   WEBHOOK_URL: "***"
 

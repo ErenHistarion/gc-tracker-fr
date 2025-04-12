@@ -26,6 +26,9 @@ from src.postgresql import insert_product_availability
 
 logger = get_logger(__name__)
 
+with open("./src/config/config.yml", "r") as file:
+    configs = yaml.safe_load(file)["main"]
+
 # Google Spreadsheet Access
 sheets = {
     # "Tests": spreadsheet.worksheet("Tests"),
@@ -34,7 +37,10 @@ sheets = {
 }
 
 # Constants
-MAX_THREADS = 3  ## 3 default value
+MAX_THREADS = configs["MAX_THREADS"]
+ACTIVE_DISCORD = configs["ACTIVE_DISCORD"]
+ACTIVE_SPREADSHEET = configs["ACTIVE_SPREADSHEET"]
+ACTIVE_POSTGRESQL = configs["ACTIVE_POSTGRESQL"]
 
 
 def fetch_product_info(url):
@@ -144,15 +150,15 @@ def fetch_with_playwright(url):
 
 def main():
     with open("./src/config/urls.yml", "r") as file:
-        configs = yaml.safe_load(file)
+        url_configs = yaml.safe_load(file)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         while True:
-            for gc in configs:
+            for gc in url_configs:
                 futures = []
                 current_sheet = sheets[str(gc)]
                 existing_entries = get_existing_rows(current_sheet)
-                for config in configs[gc]:
+                for config in url_configs[gc]:
                     for urls in config.values():
                         for url in urls:
                             futures.append(executor.submit(fetch_product_info, url))
@@ -163,13 +169,14 @@ def main():
                         product_data = future.result()
                         if "error" not in product_data:
                             # logger.debug(f"Data retrieved: {product_data}")
-                            clean_availability_v = clean_availability(
-                                product_data["availability"]
-                            )
-                            clean_price_v = clean_price(
-                                product_data["price"], product_data["url"]
-                            )
-                            insert_product_availability(product_data["name"], product_data["url"], True if clean_availability_v == DISPONIBLE else False, clean_price_v)
+                            clean_availability_v = clean_availability(product_data["availability"])
+                            clean_price_v = clean_price(product_data["price"], product_data["url"])
+                            insert_product_availability(
+                                product_data["name"],
+                                product_data["url"],
+                                True if clean_availability_v == DISPONIBLE else False,
+                                clean_price_v
+                            ) if ACTIVE_POSTGRESQL else None
 
                             if clean_availability_v == DISPONIBLE:
                                 message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {re.sub(r'(https?://\S+)', r'<\1>', product_data['url'])}."
@@ -177,17 +184,17 @@ def main():
                                 key = (product_data["name"], product_data["url"])
                                 if key not in existing_entries:
                                     logger.info(f"🚨 NEW {message}")
-                                    send_discord_notification(f"🚨 NEW {message}")
+                                    send_discord_notification(f"🚨 NEW {message}") if ACTIVE_DISCORD else None
                                 else:
                                     current_line = current_sheet.row_values(
                                         existing_entries[key]
                                     )
                                     if current_line[2] == RUPTURE:
                                         logger.info(f"🚨 RESTOCK {message}")
-                                        send_discord_notification(f"🚨 RESTOCK {message}")
+                                        send_discord_notification(f"🚨 RESTOCK {message}") if ACTIVE_DISCORD else None
                                     elif float(current_line[3]) > float(clean_price_v):
                                         logger.info(f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}")
-                                        send_discord_notification(f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}")
+                                        send_discord_notification(f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}") if ACTIVE_DISCORD else None
 
                             add_to_spreadsheet(
                                 existing_entries=existing_entries,
@@ -196,7 +203,7 @@ def main():
                                 name=product_data["name"],
                                 price=clean_price_v,
                                 availability=clean_availability_v,
-                            )
+                            ) if ACTIVE_SPREADSHEET else None
                         else:
                             logger.error(f"Missing data retrieved: {product_data}")
                             add_to_spreadsheet(
@@ -205,8 +212,14 @@ def main():
                                 url=product_data["url"],
                                 availability=CONFIRMER,
                                 error=product_data["error"],
-                            )
-                            insert_product_availability(None, product_data["url"], False, None, product_data["error"])
+                            ) if ACTIVE_SPREADSHEET else None
+                            insert_product_availability(
+                                None,
+                                product_data["url"],
+                                False,
+                                None,
+                                product_data["error"]
+                            ) if ACTIVE_POSTGRESQL else None
 
                     except Exception as err:
                         logger.error(f"Error processing {future}: {err}")
