@@ -1,15 +1,18 @@
-import psycopg2
+import yaml
 from psycopg2 import pool
 from contextlib import contextmanager
 from src.logger import get_logger
 
 logger = get_logger(__name__)
 
-DB_HOST = "***"
-DB_NAME = "postgres"
-DB_USER = "***"
-DB_PASSWORD = "***"
-DB_PORT = "5432"
+with open("./src/config/config.yml", "r") as file:
+    configs = yaml.safe_load(file)["postgresql"]
+
+DB_HOST = configs["DB_HOST"]
+DB_NAME = configs["DB_NAME"]
+DB_USER = configs["DB_USER"]
+DB_PASSWORD = configs["DB_PASSWORD"]
+DB_PORT = configs["DB_PORT"]
 
 class PostgresConnection:
     def __init__(self, minconn=1, maxconn=5):
