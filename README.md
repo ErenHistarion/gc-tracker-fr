@@ -36,8 +36,11 @@ uv sync
 playwright install-deps
 playwright install
 
-# Run the project
+# Run the retrieve project
 uv run main.py
+
+# Run the User Interface
+streamlit run streamlit.py
 ```
 
 By completing these steps, you'll ensure your environment is properly configured and ready for development.

@@ -22,6 +22,7 @@ from src.spreadsheet import get_existing_rows, add_to_spreadsheet, spreadsheet
 from src.discord import send_discord_notification
 from src.websites_rules import get_selectors
 from src.logger import get_logger
+from src.postgresql import insert_product_availability
 
 logger = get_logger(__name__)
 
@@ -168,6 +169,7 @@ def main():
                             clean_price_v = clean_price(
                                 product_data["price"], product_data["url"]
                             )
+                            insert_product_availability(product_data["name"], product_data["url"], True if clean_availability_v == DISPONIBLE else False, clean_price_v)
 
                             if clean_availability_v == DISPONIBLE:
                                 message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {re.sub(r'(https?://\S+)', r'<\1>', product_data['url'])}."
@@ -204,11 +206,13 @@ def main():
                                 availability=CONFIRMER,
                                 error=product_data["error"],
                             )
+                            insert_product_availability(None, product_data["url"], False, None, product_data["error"])
+
                     except Exception as err:
                         logger.error(f"Error processing {future}: {err}")
 
             logger.debug(f"Waiting for the next loop...")
-            time.sleep(random.randint(550, 650))
+            time.sleep(random.randint(900, 1800))
 
 
 if __name__ == "__main__":

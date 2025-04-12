@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gc-tracker-fr"
-version = "2025.04.10"
-description = "A tool designed to monitor the availability and prices of graphics cards."
+version = "2025.04.12"
+description = "A tool designed to monitor the availability and prices online."
 authors = [
     { name = "Kevin FISCHER", email = "mr.kevin.fischer@gmail.com" }
 ]
@@ -21,6 +21,7 @@ dependencies = [
     "playwright-stealth",
     "setuptools",
     "colorama",
+    "streamlit",
 ]
 
 [project.optional-dependencies]
