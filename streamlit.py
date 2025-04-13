@@ -10,6 +10,7 @@ import plotly.express as px
 
 st.set_page_config(layout="wide")
 st.title("GC Tracker - FR")
+st.subheader("Updated every 5 minutes")
 
 while True:
     data = select_product_price_availability()
