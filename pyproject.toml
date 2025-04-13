@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gc-tracker-fr"
-version = "2025.04.12"
+version = "2025.04.13"
 description = "A tool designed to monitor the availability and prices online."
 authors = [
     { name = "Kevin FISCHER", email = "mr.kevin.fischer@gmail.com" }
@@ -22,6 +22,7 @@ dependencies = [
     "setuptools",
     "colorama",
     "streamlit",
+    "psycopg2-binary",
 ]
 
 [project.optional-dependencies]

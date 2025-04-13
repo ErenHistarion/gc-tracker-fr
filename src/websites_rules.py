@@ -57,7 +57,7 @@ SELECTORS = {
     "topachat": {
         "name": {"tag": "h1", "class": "ps-main__product-title"},
         "price": {"tag": "span", "class": "offer-price__price"},
-        "availability": {"tag": "div", "class": "ps-main__stock--available"},
+        "availability": {"tag": "span", "class": "ps-add-cart__label"},
     },
     "hardware.fr": {
         "name": {"tag": "h1", "class": None},

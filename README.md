@@ -18,6 +18,7 @@ Before installing the project, ensure you have the following:
 - A [Google Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) with an active API key to Google Sheets.
 - A Discord [Webhook](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - [uv](https://github.com/astral-sh/uv) Python package manager
+- A [PostgreSQL] (https://www.postgresql.org/) database
 
 ## Quick Start
 
@@ -57,8 +58,6 @@ black --preview .
 
 ## TODO
 - **Add PCComponentes**: Integrate PCComponentes as a new source for product data.
-- **Save results into a database instead of overwriting a spreadsheet**: Implement a database to store results, ensuring data persistence and easier querying.
-- **Improve the method of listing URLs to check (database as well?)**: Enhance URL management by storing and retrieving URLs from a database, allowing for better organization and scalability.
 - **Automatically detect products in a store**: Implement a feature to automatically detect and list products available in a store, enhancing the application's functionality and ease of use.
 - **Optionally generate affiliate links for content creators**: Add functionality to generate affiliate links for products, enabling content creators to earn commissions.
 - **Create a user interface**: Develop a user-friendly interface to interact with the application, making it accessible to non-technical users.
@@ -82,6 +81,7 @@ black --preview .
 - https://www.compumsa.eu
 - https://www.cdiscount.com
 - https://infomaxparis.com
+- https://www.topachat.com
 
 ### Partialy compatible
 - https://www.amazon.fr         # Issue detecting price when there is no stock
@@ -91,6 +91,7 @@ black --preview .
 - https://www.beo-france.fr     # Issue detecting price
 - https://www.galaxus.fr        # Often an ERR_HTTP2_PROTOCOL_ERROR error
 - https://fr-store.msi.com      # Rare false positive availability alert
+- https://www.topbiz.fr         # Improve test
 
 ### Not compatible yet
 - https://www.pccomponentes.fr  # Error 403

@@ -18,19 +18,23 @@ from src.utils import (
     clean_availability,
     get_random_user_agent,
 )
+from src.spreadsheet import get_existing_rows, add_to_spreadsheet, spreadsheet
 from src.discord import send_discord_notification
 from src.websites_rules import get_selectors
 from src.logger import get_logger
-from src.postgresql import (
-    insert_product_availability,
-    select_product_url,
-    select_product_last_data,
-)
+from src.postgresql import insert_product_availability, select_product_url
 
 logger = get_logger(__name__)
 
 with open("./src/config/config.yml", "r") as file:
     configs = yaml.safe_load(file)["main"]
+
+# Google Spreadsheet Access
+sheets = {
+    # "Tests": spreadsheet.worksheet("Tests"),
+    "5080": spreadsheet.worksheet("5080"),
+    "5070Ti": spreadsheet.worksheet("5070Ti"),
+}
 
 # Constants
 MAX_THREADS = configs["MAX_THREADS"]
@@ -145,89 +149,122 @@ def fetch_with_playwright(url):
 
 
 def main():
+    with open("./src/config/urls.yml", "r") as file:
+        url_configs = yaml.safe_load(file)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         while True:
-            url_to_check = select_product_url()
-            futures = []
-            for gc in url_to_check:
-                futures.append(executor.submit(fetch_product_info, gc[2]))
+            for gc in url_configs:
+                futures = []
+                current_sheet = sheets[str(gc)]
+                existing_entries = get_existing_rows(current_sheet)
+                for config in url_configs[gc]:
+                    for urls in config.values():
+                        for url in urls:
+                            futures.append(executor.submit(fetch_product_info, url))
+                # logger.debug(f"{len(futures)} urls to check for {gc}")
 
-            existing_entries = select_product_last_data()
-            for future in concurrent.futures.as_completed(futures):
-                try:
-                    product_data = future.result()
-                    if "error" not in product_data:
-                        # logger.debug(f"Data retrieved: {product_data}")
-                        clean_availability_v = clean_availability(
-                            product_data["availability"]
-                        )
-                        clean_price_v = clean_price(
-                            product_data["price"], product_data["url"]
-                        )
-                        (
-                            insert_product_availability(
-                                product_data["name"],
-                                product_data["url"],
-                                True if clean_availability_v == DISPONIBLE else False,
-                                clean_price_v,
+                for future in concurrent.futures.as_completed(futures):
+                    try:
+                        product_data = future.result()
+                        if "error" not in product_data:
+                            # logger.debug(f"Data retrieved: {product_data}")
+                            clean_availability_v = clean_availability(
+                                product_data["availability"]
                             )
-                            if ACTIVE_POSTGRESQL
-                            else None
-                        )
+                            clean_price_v = clean_price(
+                                product_data["price"], product_data["url"]
+                            )
+                            (
+                                insert_product_availability(
+                                    product_data["name"],
+                                    product_data["url"],
+                                    (
+                                        True
+                                        if clean_availability_v == DISPONIBLE
+                                        else False
+                                    ),
+                                    clean_price_v,
+                                )
+                                if ACTIVE_POSTGRESQL
+                                else None
+                            )
 
-                        if clean_availability_v == DISPONIBLE:
-                            message = f"available at {clean_price_v}€ on {re.sub(r'(https?://\S+)', r'<\1>', product_data['url'])}."
+                            if clean_availability_v == DISPONIBLE:
+                                message = f"🚨 {product_data['name']} available at {clean_price_v}€ on {re.sub(r'(https?://\S+)', r'<\1>', product_data['url'])}."
 
-                            url_exists = False
-                            for row in existing_entries:
-                                url_exists = True
-                                if product_data["url"] == row[2]:
-                                    if not row[3]:
-                                        logger.info(f"🚨 RESTOCK 🚨 {row[1]} {message}")
+                                key = (product_data["name"], product_data["url"])
+                                if key not in existing_entries:
+                                    logger.info(f"🚨 NEW {message}")
+                                    (
+                                        send_discord_notification(f"🚨 NEW {message}")
+                                        if ACTIVE_DISCORD
+                                        else None
+                                    )
+                                else:
+                                    current_line = current_sheet.row_values(
+                                        existing_entries[key]
+                                    )
+                                    if current_line[2] == RUPTURE:
+                                        logger.info(f"🚨 RESTOCK {message}")
                                         (
                                             send_discord_notification(
-                                                f"🚨 RESTOCK 🚨 {row[1]} {message}"
+                                                f"🚨 RESTOCK {message}"
                                             )
                                             if ACTIVE_DISCORD
                                             else None
                                         )
-                                    elif float(row[4]) > float(clean_price_v):
+                                    elif float(current_line[3]) > float(clean_price_v):
                                         logger.info(
-                                            f"🚨 PRICE DROP: -{(float(row[4]) - float(clean_price_v)):.2f}€ 🚨 {row[1]} {message}"
+                                            f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}"
                                         )
                                         (
                                             send_discord_notification(
-                                                f"🚨 PRICE DROP: -{(float(row[4]) - float(clean_price_v)):.2f}€ 🚨 {row[1]} {message}"
+                                                f"🚨 PRICE DROP: -{(float(current_line[3]) - float(clean_price_v)):.2f}€ {message}"
                                             )
                                             if ACTIVE_DISCORD
                                             else None
                                         )
-                            if not url_exists:
-                                logger.info(
-                                    f"🚨 NEW 🚨 {product_data['name']} {message}"
-                                )
-                                (
-                                    send_discord_notification(f"🚨 NEW {message}")
-                                    if ACTIVE_DISCORD
-                                    else None
-                                )
-                    else:
-                        logger.error(f"Missing data retrieved: {product_data}")
-                        (
-                            insert_product_availability(
-                                None,
-                                product_data["url"],
-                                False,
-                                None,
-                                product_data["error"],
-                            )
-                            if ACTIVE_POSTGRESQL
-                            else None
-                        )
 
-                except Exception as err:
-                    logger.error(f"Error processing {future}: {err}")
+                            (
+                                add_to_spreadsheet(
+                                    existing_entries=existing_entries,
+                                    sheet=current_sheet,
+                                    url=product_data["url"],
+                                    name=product_data["name"],
+                                    price=clean_price_v,
+                                    availability=clean_availability_v,
+                                )
+                                if ACTIVE_SPREADSHEET
+                                else None
+                            )
+                        else:
+                            logger.error(f"Missing data retrieved: {product_data}")
+                            (
+                                add_to_spreadsheet(
+                                    existing_entries=existing_entries,
+                                    sheet=current_sheet,
+                                    url=product_data["url"],
+                                    availability=CONFIRMER,
+                                    error=product_data["error"],
+                                )
+                                if ACTIVE_SPREADSHEET
+                                else None
+                            )
+                            (
+                                insert_product_availability(
+                                    None,
+                                    product_data["url"],
+                                    False,
+                                    None,
+                                    product_data["error"],
+                                )
+                                if ACTIVE_POSTGRESQL
+                                else None
+                            )
+
+                    except Exception as err:
+                        logger.error(f"Error processing {future}: {err}")
 
             logger.debug(f"Waiting for the next loop...")
             time.sleep(random.randint(900, 1800))

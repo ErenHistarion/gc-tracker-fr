@@ -11,6 +11,7 @@ with open("./src/config/config.yml", "r") as file:
 
 WEBHOOK_URL = configs["WEBHOOK_URL"]
 
+
 def send_discord_notification(
     message,
     webhook_url=WEBHOOK_URL,
