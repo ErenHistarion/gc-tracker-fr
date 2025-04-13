@@ -15,10 +15,10 @@ GC Tracker is a tool designed to monitor the availability and prices of graphics
 
 Before installing the project, ensure you have the following:
 - Python 3.x installed on your machine.
-- A [Google Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) with an active API key to Google Sheets.
-- A Discord [Webhook](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - [uv](https://github.com/astral-sh/uv) Python package manager
+- A Discord [Webhook](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - A [PostgreSQL](https://www.postgresql.org/) database
+- Or a [Google Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) with an active API key to Google Sheets.
 
 ## Quick Start
 
