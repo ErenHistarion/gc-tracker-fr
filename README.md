@@ -1,15 +1,15 @@
 # GC Tracker
 
-GC Tracker is a tool designed to monitor the availability and prices of graphics cards across various online retail websites. It scrapes product information and records it in a Google Sheets spreadsheet for easy tracking.
+GC Tracker is a tool designed to monitor the availability and prices of graphics cards across various online retail websites. It extracts product information and records it in a PostgreSQL database for easy tracking and analysis.
 
 ## Features
 
-- Monitoring of graphics card availability and prices.
-- Data extraction from multiple websites.
-- Automatic recording of information in Google Sheets.
-- Send Discord notification
-- Use of `playwright` for rendering dynamic web pages.
-- Management of concurrent requests for increased efficiency.
+- **Monitoring**: Track the availability and prices of graphics cards.
+- **Multi-Source Data Extraction**: Extract data from multiple retail websites.
+- **Database Integration**: Automatically record information in a PostgreSQL database or Google Sheets.
+- **Notifications**: Send Discord notifications for restock and price drop alerts.
+- **Dynamic Web Rendering**: Use `playwright` for rendering dynamic web pages when `requests` is insufficient.
+- **Concurrent Requests**: Manage concurrent requests for increased efficiency.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ Before installing the project, ensure you have the following:
 - [uv](https://github.com/astral-sh/uv) Python package manager
 - A Discord [Webhook](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - A [PostgreSQL](https://www.postgresql.org/) database
-- Or a [Google Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) with an active API key to Google Sheets.
+- (Optional) A [Google Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) with an active API key for Google Sheets integration.
 
 ## Quick Start
 
@@ -47,10 +47,6 @@ streamlit run streamlit.py
 By completing these steps, you'll ensure your environment is properly configured and ready for development.
 
 ## Dev
-lint:
-```bash
-black --check .
-```
 format:
 ```bash
 black --preview .
@@ -95,3 +91,6 @@ black --preview .
 
 ### Not compatible yet
 - https://www.pccomponentes.fr  # Error 403
+
+### License
+This project is licensed under the MIT License.
