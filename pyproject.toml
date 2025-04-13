@@ -23,6 +23,8 @@ dependencies = [
     "colorama",
     "streamlit",
     "psycopg2-binary",
+    "pandas",
+    "plotly",
 ]
 
 [project.optional-dependencies]

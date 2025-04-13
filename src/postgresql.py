@@ -56,6 +56,26 @@ def execute_query(query, params=None):
     finally:
         db.close_all()
 
+def select_display_product(product_name=None):
+    query = """
+    with mp as (
+        SELECT pu.product_name, MIN(product_price) as product_price, last_date::DATE as last_date, EXTRACT(HOUR from last_date) as hour
+        FROM gc_tracker.product_availability pa
+        LEFT JOIN gc_tracker.product_url pu ON pu.store_link = pa.store_link
+        and pa.availability IS true
+        group by 1, 3, 4
+        ORDER BY last_date asc, hour desc
+    )
+    select mp.product_name, pa.store_link, mp.product_price, mp.last_date, mp.hour
+    from mp 
+    left join gc_tracker.product_availability pa
+    on pa.product_price = mp.product_price and pa.last_date::DATE = mp.last_date and EXTRACT(HOUR from pa.last_date) = mp.hour
+    where mp.product_name is not null
+    and mp.last_date >= (NOW() - INTERVAL '7 days')
+    group by 1, 2, 3, 4, 5
+    order by mp.last_date, mp.hour
+    """
+    return execute_query(query)
 
 def select_product_last_data(product_name=None):
     query = """
