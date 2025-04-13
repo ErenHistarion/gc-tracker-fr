@@ -76,6 +76,14 @@ def select_product_url(product_name=None):
     query = "SELECT * FROM gc_tracker.product_url WHERE activated = TRUE;"
     return execute_query(query)
 
+def select_product_url_monitoring(product_name=None):
+    query = """ 
+    SELECT product_name, store_link, activated FROM gc_tracker.product_url
+    order by product_name, store_link, activated
+    ;
+    """
+    return execute_query(query)
+
 
 def select_product_price_availability(product_name=None):
     query = """
