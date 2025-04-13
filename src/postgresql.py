@@ -56,6 +56,7 @@ def execute_query(query, params=None):
     finally:
         db.close_all()
 
+
 def select_display_product(product_name=None):
     query = """
     with mp as (
@@ -77,6 +78,7 @@ def select_display_product(product_name=None):
     """
     return execute_query(query)
 
+
 def select_product_last_data(product_name=None):
     query = """
     WITH latest AS (
@@ -95,6 +97,7 @@ def select_product_last_data(product_name=None):
 def select_product_url(product_name=None):
     query = "SELECT * FROM gc_tracker.product_url WHERE activated = TRUE;"
     return execute_query(query)
+
 
 def select_product_url_monitoring(product_name=None):
     query = """ 
