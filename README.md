@@ -18,7 +18,7 @@ Before installing the project, ensure you have the following:
 - A [Google Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) with an active API key to Google Sheets.
 - A Discord [Webhook](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - [uv](https://github.com/astral-sh/uv) Python package manager
-- A [PostgreSQL] (https://www.postgresql.org/) database
+- A [PostgreSQL](https://www.postgresql.org/) database
 
 ## Quick Start
 
