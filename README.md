@@ -51,6 +51,18 @@ format:
 ```bash
 black --preview .
 ```
+## Screenshots
+
+### Discord notification
+![Discord](img/gc_tracker_discord.jpg)
+*Discord notification example*
+
+### Logs
+![Logs](img/gc_tracker_logs.jpg)
+
+### Streamlit
+![Streamlit](img/gc_tracker_streamlit.jpg)
+
 
 ## TODO
 - **Add PCComponentes**: Integrate PCComponentes as a new source for product data.
