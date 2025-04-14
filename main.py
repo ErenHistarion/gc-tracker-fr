@@ -43,7 +43,7 @@ def fetch_product_info(url):
     try:
         # logger.debug(f"Fetching data from {url}, using requests")
         headers = {"User-Agent": get_random_user_agent()}
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=30)
         response.raise_for_status()
         validated_price = None
         if response.status_code in [200, 202]:
@@ -112,8 +112,8 @@ def fetch_with_playwright(url):
         )
         page = context.new_page()
         playwright_stealth.stealth_sync(page)
-        page.goto(url, timeout=20000)
-        time.sleep(5)
+        page.goto(url, timeout=30000)
+        time.sleep(10)
 
         name = (
             page.query_selector(
