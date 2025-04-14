@@ -58,7 +58,7 @@ black --preview .
 *Discord notification example*
 
 ### Logs
-![Logs](img/gc_tracker_logs.jpg)
+![Logs](img/gc_tracker_log.jpg)
 
 ### Streamlit
 ![Streamlit](img/gc_tracker_streamlit.jpg)
