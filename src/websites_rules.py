@@ -123,6 +123,11 @@ SELECTORS = {
         "price": {"tag": "div", "class": "price__default"},
         "availability": {"tag": "div", "class": "product-info__add-button"},
     },
+    "powerlab": {
+        "name": {"tag": "h1", "class": "page-heading"},
+        "price": {"tag": "span", "class": "current-price-value"},
+        "availability": {"tag": "span", "class": "product-availability"},
+    },
 }
 
 DEFAULT_SELECTORS = {
