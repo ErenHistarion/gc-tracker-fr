@@ -203,6 +203,18 @@ def main():
                                             if ACTIVE_DISCORD
                                             else None
                                         )
+                                    
+                                    elif float(row[4]) < float(clean_price_v):
+                                        logger.warning(
+                                            f"🚨 PRICE RISE: +{(float(clean_price_v) - float(row[4])):.2f}€ 🚨 {row[1]} {message}"
+                                        )
+                                        (
+                                            send_discord_notification(
+                                                f"🚨 PRICE RISE: +{(float(clean_price_v) - float(row[4])):.2f}€ 🚨 {row[1]} {message}"
+                                            )
+                                            if ACTIVE_DISCORD
+                                            else None
+                                        )                                        
                             if not url_exists:
                                 logger.info(
                                     f"🚨 NEW 🚨 {product_data['name']} {message}"

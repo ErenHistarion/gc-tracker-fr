@@ -84,6 +84,7 @@ def select_product_last_data(product_name=None):
     WITH latest AS (
         SELECT store_link, MAX(last_date) AS last_date
         FROM gc_tracker.product_availability
+        where availability IS true
         GROUP BY store_link
     )
     SELECT p.id, COALESCE(pu.product_name, p.product_name) AS product_name, p.store_link, p.availability, p.product_price, p.last_date
